@@ -7,4 +7,3 @@ xgboost
 openai
 pandas
 langchain_community
-dotenv
