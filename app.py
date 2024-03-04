@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, jsonify
 import joblib, os
 from collections import Counter
+from make_csv import get_csv
+import pandas as pd
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI", "sqlite:///posts.db")
 # Load saved models
@@ -38,6 +40,26 @@ def predict():
 
     return render_template('index.html', question=question, nb_prediction=nb_prediction,
                            svm_prediction=svm_prediction, xgb_prediction=xgb_prediction, final_prediction=final_prediction)
+
+@app.route('/upload', methods=['GET','POST'])
+def upload():
+    if request.method == 'POST':
+        # Get the uploaded PDF file
+        pdf_file = request.files['pdf_file']
+
+        # Save the uploaded PDF file to a temporary location
+        pdf_file_path = 'temp.pdf'
+        pdf_file.save(pdf_file_path)
+
+        # Extract questions from the uploaded PDF and generate CSV
+        get_csv(pdf_file_path)
+        df = pd.read_csv('questions.csv')
+
+        # return jsonify({'message': 'CSV file generated successfully'})
+        return render_template('upload.html',dataframe = df) 
+    else:
+        # Handle GET request (if needed)
+        return render_template('upload.html')  # Render the upload.html page
 
 if __name__ == '__main__':
     app.run(debug=True)
