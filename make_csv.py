@@ -3,9 +3,7 @@ from langchain_community.document_loaders import PyPDFLoader
 import pandas as pd
 import os, joblib
 from collections import Counter
-from dotenv import load_dotenv
 
-load_dotenv()
 api_key = os.getenv("api_key")
 vectorizer = joblib.load('count_vectorizer.joblib')
 naive_bayes_model = joblib.load('naive_bayes_model.joblib')
