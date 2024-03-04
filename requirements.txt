@@ -7,3 +7,4 @@ xgboost
 openai
 pandas
 langchain_community
+pypdf
